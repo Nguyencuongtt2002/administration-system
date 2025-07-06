@@ -1,0 +1,4 @@
+export { default as DialogDelete } from './ModalDelete/ModalDelete'
+export { default as Loading } from './Loading/Loading'
+export * from './Loading/LoadingData'
+export { default as VerifyModal } from './VerifyModal/VerifyModal'
