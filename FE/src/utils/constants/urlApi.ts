@@ -2,7 +2,8 @@ export const urlApiAuth = {
   login: '/v1/auth/login',
   register: '/v1/auth/register',
   handleCheckCode: '/v1/auth/check-code',
-  handleResendCode: '/v1/auth/resend-code'
+  handleResendCode: '/v1/auth/resend-code',
+  handleRetryActive: '/v1/auth/retry-active'
 }
 
 export const urlApiMessage = {

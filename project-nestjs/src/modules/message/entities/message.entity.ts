@@ -3,6 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('messages')
@@ -18,6 +20,10 @@ export class Message {
 
   @Column()
   content: string;
+
+  @ManyToOne(() => Message, { nullable: true })
+  @JoinColumn({ name: 'replyToMessageId' })
+  replyToMessage?: Message;
 
   @CreateDateColumn()
   createdAt: Date;

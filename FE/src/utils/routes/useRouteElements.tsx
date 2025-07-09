@@ -12,6 +12,7 @@ import {
   LoginForm,
   MenuPage,
   MessagePage,
+  NotFound,
   RegisterPage,
   SlidePage,
   VerifyPage
@@ -97,6 +98,10 @@ const useRouteElements = () => {
           element: <VerifyPage />
         }
       ]
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
   return routeElements

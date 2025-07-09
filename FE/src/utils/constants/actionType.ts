@@ -3,6 +3,7 @@ export const LOGIN = 'LOGIN'
 export const REGISTER = 'REGISTER'
 export const CHECK_CODE = 'CHECK_CODE'
 export const RESEND_CODE = 'RESEND_CODE'
+export const RETRY_ACTIVE = 'RETRY_ACTIVE'
 //#endregion Auth
 
 //#region Category

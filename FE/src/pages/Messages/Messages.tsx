@@ -1,10 +1,12 @@
+// MessagePage.tsx – có hỗ trợ chức năng reply
+
 import { useContext, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
-import { formatLastActive, getDecodedToken } from '@/utils/helper/common'
+import { formatLastActive, formatToHourMinute, getDecodedToken } from '@/utils/helper/common'
 import { IMessage, IQueryMessgae } from '@/utils/interface/message'
 import { LoadingData } from '@/components/common'
 import { useTranslation } from 'react-i18next'
@@ -15,6 +17,7 @@ import { getSocket, initSocket } from '@/utils/constants/websocket'
 import { IAccount } from '@/utils/interface/auth'
 import { NUMBER_ONE, NUMBER_ZERO } from '@/utils/constants/common'
 import { findAllExcluding } from '@/thunks/user/userThunk'
+import { Reply } from 'lucide-react'
 
 export default function MessagePage() {
   const loadingContext = useContext(LoadingData)
@@ -26,6 +29,7 @@ export default function MessagePage() {
   const [selectedUser, setSelectedUser] = useState<any>(null)
   const [messages, setMessages] = useState<IMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
+  const [replyingTo, setReplyingTo] = useState<IMessage | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const [onlineUserIds, setOnlineUserIds] = useState<number[]>([])
   const [userStatusMap, setUserStatusMap] = useState<Record<number, { isOnline: boolean; lastActive: string | null }>>(
@@ -65,11 +69,8 @@ export default function MessagePage() {
     const socket = getSocket()
     if (!socket) return
 
-    //socket.emit("getOnlineUsers");
-
     socket.on('onlineUsers', (userIds: number[]) => {
       setOnlineUserIds(userIds)
-
       setUserStatusMap((prev) => {
         const updated = { ...prev }
         const now = new Date().toISOString()
@@ -82,13 +83,11 @@ export default function MessagePage() {
           const id = parseInt(idStr)
           if (!userIds.includes(id)) {
             if (updated[id]?.isOnline !== false) {
-              updated[id] = {
-                isOnline: false,
-                lastActive: now
-              }
+              updated[id] = { isOnline: false, lastActive: now }
             }
           }
         })
+
         localStorage.setItem('userStatusMap', JSON.stringify(updated))
         return updated
       })
@@ -134,17 +133,13 @@ export default function MessagePage() {
   const handleFindAllExcluding = async () => {
     try {
       loadingContext?.show()
-
       const res = await dispatch(findAllExcluding()).unwrap()
-
       const usersData = res.data
       setUsers(usersData)
       const savedUserId = localStorage.getItem('selectedUserId')
       if (savedUserId) {
         const foundUser = usersData.find((user) => String(user.MaNguoiDung) === savedUserId)
-        if (foundUser) {
-          setSelectedUser(foundUser)
-        }
+        if (foundUser) setSelectedUser(foundUser)
       }
       const savedStatusMap = localStorage.getItem('userStatusMap')
       let currentStatusMap: Record<number, { isOnline: boolean; lastActive: string | null }> = {}
@@ -176,7 +171,6 @@ export default function MessagePage() {
 
   const handleListMessage = (payload: IQueryMessgae) => {
     loadingContext?.show()
-
     dispatch(fetchMessages(payload))
       .unwrap()
       .then((res) => {
@@ -196,22 +190,25 @@ export default function MessagePage() {
     const msg = {
       senderId: currentUserId,
       receiverId: selectedUser.MaNguoiDung,
-      content: newMessage
+      content: newMessage,
+      replyToMessageId: replyingTo?.id
     }
 
     const socket = getSocket()
     if (!socket) return
 
     socket.emit('sendMessage', msg)
-    setMessages((prev: IMessage[]) => [
+    setMessages((prev) => [
       ...prev,
       {
         ...(msg as IMessage),
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+        replyToMessage: replyingTo || undefined
+      } as IMessage
     ])
 
     setNewMessage('')
+    setReplyingTo(null)
   }
 
   const handleSelectUser = (user: IAccount) => {
@@ -240,7 +237,7 @@ export default function MessagePage() {
                     <AvatarFallback>{user?.TaiKhoan?.[0]}</AvatarFallback>
                   </Avatar>
                   {isOnline && (
-                    <span className='absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full'></span>
+                    <span className='absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full' />
                   )}
                 </div>
                 <span>{user?.TaiKhoan}</span>
@@ -249,7 +246,6 @@ export default function MessagePage() {
           })}
         </ul>
       </div>
-
       <div className='col-span-9'>
         <Card className='h-full max-h-[90vh] flex flex-col'>
           <CardHeader className='border-b border-gray-200 dark:border-gray-700'>
@@ -275,26 +271,52 @@ export default function MessagePage() {
                 {messages?.map((msg, idx) => (
                   <div
                     key={idx}
-                    className={`px-3 py-2 rounded-2xl w-fit ${
+                    className={`px-3 py-2 rounded-2xl w-fit max-w-[80%] ${
                       msg.senderId === currentUserId ? 'bg-[#04A7EB] text-white ml-auto' : 'bg-[#133644] text-white'
                     }`}
                   >
-                    <p className='text-sm break-all whitespace-pre-wrap'>{msg.content}</p>
+                    {msg.replyToMessage && (
+                      <div className='mb-2 px-3 py-2 text-xs rounded-lg bg-white/10 border-l-4 border-blue-400 text-gray-100'>
+                        <p className='line-clamp-2 break-words italic opacity-90'>{msg.replyToMessage.content}</p>
+                      </div>
+                    )}
 
-                    <p className='text-xs text-gray-500 mt-1'>
-                      {msg.timestamp || msg.createdAt
-                        ? new Date(msg.timestamp || msg.createdAt!).toLocaleTimeString()
-                        : ''}
+                    <p className='text-sm break-words whitespace-pre-wrap'>{msg.content}</p>
+                    <p className='text-[10px] text-gray-200 mt-1'>
+                      {(() => {
+                        const time = msg.timestamp || msg.createdAt
+                        return formatToHourMinute(time)
+                      })()}
                     </p>
+
+                    <button
+                      onClick={() => setReplyingTo(msg)}
+                      className='flex items-center gap-1 text-[10px] text-blue-200 hover:underline mt-1'
+                    >
+                      <Reply size={12} strokeWidth={2} />
+                      Trả lời
+                    </button>
                   </div>
                 ))}
                 <div ref={scrollRef}></div>
               </div>
             </ScrollArea>
 
-            <div className='mt-4 flex gap-2'>
+            {replyingTo && (
+              <div className='flex items-center justify-between px-3 py-2 mb-2 rounded-lg bg-[#f0f2f5] text-sm text-gray-800'>
+                <div className='flex-1 overflow-hidden'>
+                  <span className='text-[10px] text-gray-500'>Đang trả lời:</span>
+                  <p className='text-[12px] truncate'>{replyingTo.content}</p>
+                </div>
+                <button onClick={() => setReplyingTo(null)} className='ml-2 text-xs text-gray-500 hover:text-red-500'>
+                  ✕
+                </button>
+              </div>
+            )}
+
+            <div className='mt-2 flex gap-2'>
               <Textarea
-                placeholder={t('common_placeholder_chat')}
+                placeholder='Nhập tin nhắn...'
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => {

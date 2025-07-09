@@ -3,13 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import SwitchLanguage from '@/components/switch-language'
 import { ModeToggle } from '@/components/mode-toggle'
 import { IBodyLogin } from '@/utils/interface/auth'
 import { useAppDispatch } from '@/utils/redux/hooks'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authActions } from '@/thunks/auth/authSlice'
 import { handleLogin } from '@/thunks/auth/authThunk'
@@ -17,7 +17,7 @@ import { RoleEnum } from '@/utils/enum/common'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import http from '@/apis/axios.customize'
-import { LoadingData } from '@/components/common'
+import { LoadingData, ModalReactive } from '@/components/common'
 import { EMPTY_STRING } from '@/utils/constants/common'
 
 const loginSchema = z.object({
@@ -38,6 +38,8 @@ const LoginForm = () => {
     }
   })
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
   const onSubmit = async (data: IBodyLogin) => {
     loadingContext?.show()
 
@@ -51,7 +53,11 @@ const LoginForm = () => {
           navigate('/')
         }
       })
-      .catch((err) => {})
+      .catch((err) => {
+        if (err.response.status === 400) {
+          setIsModalOpen(true)
+        }
+      })
       .finally(() => {
         loadingContext?.hide()
       })
@@ -77,72 +83,76 @@ const LoginForm = () => {
           <CardDescription className='text-gray-500'>{t('enterCredentials')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form className='space-y-6' noValidate onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name='Email'
-                render={({ field }) => (
-                  <FormItem>
-                    <Label htmlFor='Email'>{t('email')}</Label>
-                    <Input
-                      id='Email'
-                      type='email'
-                      placeholder={t('emailPlaceholder')}
-                      required
-                      className='mt-1'
-                      {...field}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormProvider {...form}>
+            <Form {...form}>
+              <form className='space-y-6' noValidate onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  control={form.control}
+                  name='Email'
+                  render={({ field }) => (
+                    <FormItem>
+                      <Label htmlFor='Email'>{t('email')}</Label>
+                      <Input
+                        id='Email'
+                        type='email'
+                        placeholder={t('emailPlaceholder')}
+                        required
+                        className='mt-1'
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name='MatKhau'
-                render={({ field }) => (
-                  <FormItem>
-                    <Label htmlFor='MatKhau'>{t('password')}</Label>
-                    <Input
-                      id='MatKhau'
-                      type='password'
-                      placeholder={t('passwordPlaceholder')}
-                      required
-                      className='mt-1'
-                      {...field}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name='MatKhau'
+                  render={({ field }) => (
+                    <FormItem>
+                      <Label htmlFor='MatKhau'>{t('password')}</Label>
+                      <Input
+                        id='MatKhau'
+                        type='password'
+                        placeholder={t('passwordPlaceholder')}
+                        required
+                        className='mt-1'
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <Button type='submit' className='w-full'>
-                {t('login')}
-              </Button>
-              <Button
-                variant='outline'
-                className='w-full flex items-center justify-center gap-2 cursor-pointer'
-                type='button'
-                onClick={handleGoogleLogin}
-              >
-                <img src='https://www.svgrepo.com/show/475656/google-color.svg' alt='Google' className='w-5 h-5' />
-                {t('signInWithGoogle')}
-              </Button>
-
-              <div className='text-center pt-2'>
-                <span className='text-sm text-muted-foreground'>{t('noAccount')} </span>
-                <Button
-                  variant='link'
-                  type='button'
-                  className='p-0 h-auto text-sm font-medium'
-                  onClick={() => navigate('/register')}
-                >
-                  {t('signUp')}
+                <Button type='submit' className='w-full'>
+                  {t('login')}
                 </Button>
-              </div>
-            </form>
-          </Form>
+                <Button
+                  variant='outline'
+                  className='w-full flex items-center justify-center gap-2 cursor-pointer'
+                  type='button'
+                  onClick={handleGoogleLogin}
+                >
+                  <img src='https://www.svgrepo.com/show/475656/google-color.svg' alt='Google' className='w-5 h-5' />
+                  {t('signInWithGoogle')}
+                </Button>
+
+                <div className='text-center pt-2'>
+                  <span className='text-sm text-muted-foreground'>{t('noAccount')} </span>
+                  <Button
+                    variant='link'
+                    type='button'
+                    className='p-0 h-auto text-sm font-medium'
+                    onClick={() => navigate('/register')}
+                  >
+                    {t('signUp')}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+
+            <ModalReactive isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          </FormProvider>
         </CardContent>
       </Card>
     </div>

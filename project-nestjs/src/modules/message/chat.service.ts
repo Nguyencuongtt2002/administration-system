@@ -14,10 +14,25 @@ export class ChatService {
     senderId: number;
     receiverId: number;
     content: string;
+    replyToMessageId?: number;
   }) {
-    const message = this.messageRepo.create(data);
-    return await this.messageRepo.save(message);
+    const message = this.messageRepo.create({
+      senderId: data.senderId,
+      receiverId: data.receiverId,
+      content: data.content,
+      replyToMessage: data.replyToMessageId
+        ? { id: data.replyToMessageId }
+        : undefined,
+    });
+
+    await this.messageRepo.save(message);
+
+    return await this.messageRepo.findOne({
+      where: { id: message.id },
+      relations: ['replyToMessage'],
+    });
   }
+
   async getMessages(user1: number, user2: number) {
     return this.messageRepo.find({
       where: [
@@ -25,6 +40,7 @@ export class ChatService {
         { senderId: user2, receiverId: user1 },
       ],
       order: { createdAt: 'ASC' },
+      relations: ['replyToMessage'],
     });
   }
 }

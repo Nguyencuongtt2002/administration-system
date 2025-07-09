@@ -22,6 +22,11 @@ const authApi = {
   handleResendCode(payload: { MaNguoiDung: number }) {
     const url = `${urlApiAuth.handleResendCode}`
     return http.post<IBaseResponse>(url, payload)
+  },
+
+  handleRetryActive(payload: { Email: string }) {
+    const url = `${urlApiAuth.handleRetryActive}`
+    return http.post<IBaseResponse<{ MaNguoiDung: string }>>(url, payload)
   }
 }
 

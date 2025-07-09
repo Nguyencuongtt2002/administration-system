@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 // Others
-import { handleCheckCode, handleLogin, handleRegister, handleResendCode } from './authThunk'
+import { handleCheckCode, handleLogin, handleRegister, handleResendCode, handleRetryActive } from './authThunk'
 import { IAccount } from '@/utils/interface/auth'
 import { RootState } from '@/utils/redux/store'
 import { StorageEnum } from '@/utils/enum/common'
@@ -85,6 +85,12 @@ const authSlice = createSlice({
       .addCase(handleResendCode.pending, (state) => {})
       .addCase(handleResendCode.fulfilled, (state, action) => {})
       .addCase(handleResendCode.rejected, (state) => {})
+
+    // POST: retry active
+    builder
+      .addCase(handleRetryActive.pending, (state) => {})
+      .addCase(handleRetryActive.fulfilled, (state, action) => {})
+      .addCase(handleRetryActive.rejected, (state) => {})
   }
 })
 

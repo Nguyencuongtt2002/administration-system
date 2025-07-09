@@ -100,6 +100,12 @@ export const formatPhoneNumber = (value: string): string => {
   )}-${phoneNumber.slice(FORMAT_NUMBER.numberSix, FORMAT_NUMBER.numberTen)}`
 }
 
-export const formatTimer = (seconds: number): string => {
+export const formatSecondsToMMSS = (seconds: number): string => {
   return dayjs.duration(seconds, 'seconds').format(TimeFormatEnum.MM_SS)
+}
+
+export const formatToHourMinute = (time?: string | number | Date): string => {
+  if (!time) return EMPTY_STRING
+  const parsed = dayjs(time)
+  return parsed.isValid() ? parsed.format(TimeFormatEnum.DEFAULT) : EMPTY_STRING
 }

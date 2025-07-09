@@ -19,6 +19,7 @@ import { compareDataUpdate, formatPhoneNumber } from '@/utils/helper/common'
 import { IAddContactReq, IListContact, IUpdateContact } from '@/utils/interface/contact'
 import { createContact, getContactDetails, updateContact } from '@/thunks/contact/contactThunk'
 import { contactActions } from '@/thunks/contact/contactSlice'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Props = {
   isOpen: boolean
@@ -54,6 +55,7 @@ const FormContact = (props: Props) => {
   const dispatch = useAppDispatch()
 
   const [dataOriginal, setDataOriginal] = useState<IListContact>()
+  const [provinces, setProvinces] = useState<{ idProvince: string; name: string }[]>([])
 
   useEffect(() => {
     if (!id) {
@@ -67,6 +69,20 @@ const FormContact = (props: Props) => {
 
     handleDetailCategory(id)
   }, [id])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://vietnam-administrative-division-json-server-swart.vercel.app/province')
+        const data = await response.json()
+        setProvinces(data)
+      } catch (error) {
+        console.error('Error fetching provinces:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const handleDetailCategory = (id: string) => {
     if (!id) return
@@ -218,13 +234,25 @@ const FormContact = (props: Props) => {
                         <span className='text-red-500'>*</span>
                       </Label>
                       <div className='col-span-3 w-full space-y-2'>
-                        <Input type='text' className='w-full' {...field} />
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger className='w-full'>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {provinces.map((province) => (
+                              <SelectItem key={province.idProvince} value={province.name}>
+                                {province.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </div>
                     </div>
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name='SoDienThoai'

@@ -16,7 +16,7 @@ import { LoadingData } from '@/components/common'
 import { handleCheckCode, handleResendCode } from '@/thunks/auth/authThunk'
 import { toast } from 'sonner'
 import { EMPTY_STRING, NUMBER_ONE, NUMBER_ZERO, RESEND_INTERVAL } from '@/utils/constants/common'
-import { formatTimer } from '@/utils/helper/common'
+import { formatSecondsToMMSS } from '@/utils/helper/common'
 
 const verifySchema = z.object({
   MaNguoiDung: z.string(),
@@ -135,7 +135,9 @@ export default function VerifyPage() {
                   onClick={handleResend}
                   className='text-sm text-blue-600 hover:underline p-0 h-auto'
                 >
-                  {resendTimer > NUMBER_ZERO ? `Gửi lại sau ${formatTimer(resendTimer)}` : 'Gửi lại mã xác thực'}
+                  {resendTimer > NUMBER_ZERO
+                    ? `Gửi lại sau ${formatSecondsToMMSS(resendTimer)}`
+                    : 'Gửi lại mã xác thực'}
                 </Button>
               </div>
             </form>

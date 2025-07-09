@@ -1,5 +1,5 @@
 import authApi from '@/apis/auth'
-import { CHECK_CODE, LOGIN, REGISTER, RESEND_CODE } from '@/utils/constants/actionType'
+import { CHECK_CODE, LOGIN, REGISTER, RESEND_CODE, RETRY_ACTIVE } from '@/utils/constants/actionType'
 import { IBodyCodeActive, IBodyLogin, IBodyRegister } from '@/utils/interface/auth'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
@@ -38,6 +38,19 @@ export const handleResendCode = createAsyncThunk(
   async (payload: { MaNguoiDung: number }, { rejectWithValue }) => {
     try {
       const resp = await authApi.handleResendCode(payload)
+
+      return resp?.data
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
+)
+
+export const handleRetryActive = createAsyncThunk(
+  RETRY_ACTIVE,
+  async (payload: { Email: string }, { rejectWithValue }) => {
+    try {
+      const resp = await authApi.handleRetryActive(payload)
 
       return resp?.data
     } catch (error) {

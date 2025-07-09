@@ -1,10 +1,24 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { BrandTable } from '@/components/module/Brand'
 
 const BrandPage = () => {
   const { t } = useTranslation()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://vietnam-administrative-division-json-server-swart.vercel.app/province')
+        const data = await response.json()
+        console.log(data) // Kết quả sẽ là mảng 63 tỉnh/thành
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <main className='grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8'>
       <div className='space-y-2'>
