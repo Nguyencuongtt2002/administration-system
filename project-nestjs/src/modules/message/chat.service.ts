@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
+import { MessageReaction } from './entities/message-reaction.entity';
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepo: Repository<Message>,
+    @InjectRepository(MessageReaction)
+    private readonly reactionRepo: Repository<MessageReaction>,
   ) {}
 
   async saveMessage(data: {
@@ -40,7 +43,37 @@ export class ChatService {
         { senderId: user2, receiverId: user1 },
       ],
       order: { createdAt: 'ASC' },
-      relations: ['replyToMessage'],
+      relations: ['replyToMessage', 'reactions'],
     });
+  }
+
+  async findMessageById(messageId: number) {
+    return await this.messageRepo.findOne({
+      where: { id: messageId },
+    });
+  }
+
+  async addReaction(messageId: number, userId: number, emoji: string) {
+    const message = await this.messageRepo.findOneBy({ id: messageId });
+    if (!message) throw new Error('Message không tồn tại');
+
+    const existing = await this.reactionRepo.findOne({
+      where: { messageId, userId },
+    });
+
+    if (existing) {
+      existing.emoji = emoji;
+      return await this.reactionRepo.save(existing);
+    }
+
+    const reaction = this.reactionRepo.create({
+      messageId,
+      userId,
+      emoji,
+    });
+
+    console.log(reaction);
+
+    return await this.reactionRepo.save(reaction);
   }
 }

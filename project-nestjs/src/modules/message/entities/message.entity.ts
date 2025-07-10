@@ -5,7 +5,9 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
+import { MessageReaction } from './message-reaction.entity';
 
 @Entity('messages')
 export class Message {
@@ -24,6 +26,11 @@ export class Message {
   @ManyToOne(() => Message, { nullable: true })
   @JoinColumn({ name: 'replyToMessageId' })
   replyToMessage?: Message;
+
+  @OneToMany(() => MessageReaction, (reaction) => reaction.message, {
+    cascade: true,
+  })
+  reactions: MessageReaction[];
 
   @CreateDateColumn()
   createdAt: Date;

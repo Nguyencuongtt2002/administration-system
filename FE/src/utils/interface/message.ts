@@ -18,4 +18,5 @@ export interface IMessage {
     content: string
     createdAt: string
   }
+  reactions?: { userId: number; emoji: string }[]
 }

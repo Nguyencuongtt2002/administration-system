@@ -9,10 +9,11 @@ import { ChatController } from './chat.controller ';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import ms from 'ms';
+import { MessageReaction } from './entities/message-reaction.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Message]),
+    TypeOrmModule.forFeature([Message, MessageReaction]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

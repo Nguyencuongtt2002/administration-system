@@ -83,6 +83,36 @@ export class ChatGateway {
     }
   }
 
+  @SubscribeMessage('reactionMessage') // on (server-side lắng nghe sự kiện từ client)
+  async handleReactionMessage(
+    @MessageBody() data: { messageId: number; userId: number; emoji: string },
+  ) {
+    try {
+      const { messageId, userId, emoji } = data;
+
+      await this.chatService.addReaction(messageId, userId, emoji);
+
+      // gửi về cho cả 2 user
+      const message = await this.chatService.findMessageById(messageId);
+      const receiverId = message?.receiverId;
+
+      const reactionPayload = { messageId, userId, emoji };
+
+      this.server
+        .to(userId.toString())
+        // xử lý rồi emit ngược lại cho 2 client
+        .emit('messageReaction', reactionPayload);
+      if (receiverId) {
+        this.server
+          .to(receiverId.toString())
+          .emit('messageReaction', reactionPayload);
+      }
+    } catch (error) {
+      console.log(error);
+      throw new WsException('Lỗi khi xử lý reaction');
+    }
+  }
+
   //socket.on(eventName, callback)
   // Lắng nghe (nghe ngóng) sự kiện được gửi đến, và xử lý khi có sự kiện đó.
 
