@@ -1,6 +1,6 @@
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { locales } from '@/i18n/i18n'
 import { useTranslation } from 'react-i18next'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/common'
 
 export default function SwitchLanguage() {
   const { i18n } = useTranslation()

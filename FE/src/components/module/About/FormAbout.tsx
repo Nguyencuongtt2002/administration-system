@@ -4,20 +4,31 @@ import { toast } from 'sonner'
 import { Trash, Upload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useContext, useEffect, useState, Dispatch, SetStateAction, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Textarea } from '@/components/ui/textarea'
 import { EMPTY_STRING } from '@/utils/constants/common'
 import { useAppDispatch } from '@/utils/redux/hooks'
 import { compareDataUpdate } from '@/utils/helper/common'
-import { LoadingData } from '@/components/common'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  LoadingData,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+  Input,
+  Label,
+  Textarea
+} from '@/components/common'
 import { IAddAboutReq, IListAbout, IUpdateAbout } from '@/utils/interface/about'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { createAbout, getAboutDetails, updateAbout } from '@/thunks/about/aboutThunk'
 import { uploadSingleFile } from '@/thunks/file/fileThunk'
 import { IUploadSingleFileParams } from '@/utils/interface/common'

@@ -1,21 +1,29 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import SwitchLanguage from '@/components/switch-language'
-import { ModeToggle } from '@/components/mode-toggle'
 import { IBodyRegister } from '@/utils/interface/auth'
 import { useAppDispatch } from '@/utils/redux/hooks'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { LoadingData, VerifyModal } from '@/components/common'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+  Input,
+  Label,
+  LoadingData,
+  ModeToggle,
+  SwitchLanguage
+} from '@/components/common'
 import { handleRegister } from '@/thunks/auth/authThunk'
-import { EMPTY_STRING } from '@/utils/constants/common'
 
 const registerSchema = z.object({
   TaiKhoan: z.string().min(1, 'Tài khoản không được để trống'),

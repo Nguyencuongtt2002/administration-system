@@ -1,5 +1,5 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/common'
 import { ShoppingCart, Users2, DollarSign, Salad } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const stats = [
   {

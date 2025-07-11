@@ -1,8 +1,7 @@
-import { ModeToggle } from '@/components/mode-toggle'
 import DropdownAvatar from './dropdown-avatar'
-import SwitchLanguage from '@/components/switch-language'
 import NotificationComponent from '@/components/NotificationComponent'
 import MessageComponent from '@/components/MessageComponent'
+import { ModeToggle, SwitchLanguage } from '@/components/common'
 
 const AppHeader = () => {
   return (

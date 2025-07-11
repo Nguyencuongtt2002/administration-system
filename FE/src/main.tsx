@@ -2,14 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { RouterProvider } from 'react-router-dom'
-import { ThemeProvider } from './components/theme-provider'
 import { Provider } from 'react-redux'
 import { persistor, store } from './utils/redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import '@/i18n/i18n'
-import { Toaster } from '@/components/ui/sonner'
 import useRouteElements from './utils/routes/useRouteElements'
-import { LoadingDataProvider } from './components/common'
+import { LoadingDataProvider, ThemeProvider, Toaster } from '@/components/common'
 
 const routeElements = useRouteElements()
 

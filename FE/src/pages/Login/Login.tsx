@@ -1,15 +1,8 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import SwitchLanguage from '@/components/switch-language'
-import { ModeToggle } from '@/components/mode-toggle'
 import { IBodyLogin } from '@/utils/interface/auth'
 import { useAppDispatch } from '@/utils/redux/hooks'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authActions } from '@/thunks/auth/authSlice'
 import { handleLogin } from '@/thunks/auth/authThunk'
@@ -17,7 +10,24 @@ import { RoleEnum } from '@/utils/enum/common'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import http from '@/apis/axios.customize'
-import { LoadingData, ModalReactive } from '@/components/common'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+  Input,
+  Label,
+  LoadingData,
+  ModalReactive,
+  ModeToggle,
+  SwitchLanguage
+} from '@/components/common'
 import { EMPTY_STRING } from '@/utils/constants/common'
 
 const loginSchema = z.object({

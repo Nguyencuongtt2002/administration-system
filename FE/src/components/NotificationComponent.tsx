@@ -1,13 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import { FiBell } from 'react-icons/fi'
 import { jwtDecode } from 'jwt-decode'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { getDecodedToken } from '@/utils/helper/common'
 import { IAccount } from '@/utils/interface/auth'
 import { getSocket, initSocket } from '@/utils/constants/websocket'
 import { useAppSelector } from '@/utils/redux/hooks'
+import { Button, Card, CardContent, CardHeader, CardTitle, ScrollArea } from '@/components/common'
 
 interface Notification {
   content: string

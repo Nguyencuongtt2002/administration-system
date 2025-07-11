@@ -15,19 +15,25 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 
-import { LoadingData } from '@/components/common'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import AutoPagination from '@/components/auto-pagination'
 import {
+  AutoPagination,
+  Button,
+  DialogDelete,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
+  DropdownMenuTrigger,
+  Input,
+  LoadingData,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/common'
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Plus } from 'lucide-react'
 
@@ -49,7 +55,6 @@ import useDebounce from '@/utils/hooks/useDebounce'
 import { FormCategory } from '@/components/module/Category'
 import { useSelector } from 'react-redux'
 import { categoryActions, selectIsRefreshCategoryList } from '@/thunks/category/categorySlice'
-import { DialogDelete } from '@/components/common'
 import { TFunction } from 'i18next'
 import { TranslationEnum } from '@/utils/enum/common'
 

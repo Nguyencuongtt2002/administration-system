@@ -1,12 +1,20 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Textarea } from '@/components/ui/textarea'
 import { formatLastActive, formatToHourMinute, getDecodedToken } from '@/utils/helper/common'
 import { IMessage, IQueryMessgae } from '@/utils/interface/message'
-import { LoadingData, ReactionPicker } from '@/components/common'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  LoadingData,
+  ReactionPicker,
+  ScrollArea,
+  Textarea
+} from '@/components/common'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from '@/utils/redux/hooks'
 import { fetchMessages } from '@/thunks/message/messageThunk'

@@ -1,8 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
 import { useForm, useFormContext, useWatch } from 'react-hook-form'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { useAppDispatch } from '@/utils/redux/hooks'
 import { LoadingData } from '@/components/common/Loading/LoadingData'
@@ -10,6 +7,7 @@ import { toast } from 'sonner'
 import { handleCheckCode, handleRetryActive } from '@/thunks/auth/authThunk'
 import { IBodyCodeActive } from '@/utils/interface/auth'
 import { EMPTY_STRING, NUMBER_ZERO } from '@/utils/constants/common'
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input } from '@/components/common'
 
 type Props = {
   isModalOpen: boolean

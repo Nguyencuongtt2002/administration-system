@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AboutTable } from '@/components/module/About'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common'
 
 const AboutPage = () => {
   const { t } = useTranslation()

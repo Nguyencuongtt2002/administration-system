@@ -1,11 +1,11 @@
 import { useAppSelector } from '@/utils/redux/hooks'
 import menuItems from './menuItems'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Package2, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { RootState } from '@/utils/redux/store'
 import { RoleEnum } from '@/utils/enum/common'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/common'
 
 export default function NavLinks() {
   const { t } = useTranslation()

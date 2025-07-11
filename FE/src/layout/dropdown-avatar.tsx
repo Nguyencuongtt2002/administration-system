@@ -1,16 +1,18 @@
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '@/utils/redux/hooks'
+import { authActions } from '@/thunks/auth/authSlice'
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '@/utils/redux/hooks'
-import { authActions } from '@/thunks/auth/authSlice'
+} from '@/components/common'
 
 export default function DropdownAvatar() {
   const dispatch = useAppDispatch()

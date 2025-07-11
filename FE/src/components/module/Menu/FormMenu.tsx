@@ -3,14 +3,26 @@ import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useContext, useEffect, useState, Dispatch, SetStateAction } from 'react'
 
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { LoadingData } from '@/components/common'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  LoadingData,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+  Input,
+  Label
+} from '@/components/common'
 
 import { EMPTY_STRING, NUMBER_ONE } from '@/utils/constants/common'
 import { useAppDispatch } from '@/utils/redux/hooks'

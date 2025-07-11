@@ -1,18 +1,24 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Separator } from '@/components/ui/separator'
 import { useContext, useEffect, useState } from 'react'
-import SwitchLanguage from '@/components/switch-language'
-import { ModeToggle } from '@/components/mode-toggle'
 import { IBodyCodeActive } from '@/utils/interface/auth'
 import { useAppDispatch } from '@/utils/redux/hooks'
-import { LoadingData } from '@/components/common'
+import {
+  Button,
+  Card,
+  CardContent,
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+  Input,
+  LoadingData,
+  ModeToggle,
+  Separator,
+  SwitchLanguage
+} from '@/components/common'
 import { handleCheckCode, handleResendCode } from '@/thunks/auth/authThunk'
 import { toast } from 'sonner'
 import { EMPTY_STRING, NUMBER_ONE, NUMBER_ZERO, RESEND_INTERVAL } from '@/utils/constants/common'

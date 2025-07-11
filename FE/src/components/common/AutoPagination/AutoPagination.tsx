@@ -1,5 +1,9 @@
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useEffect, useState } from 'react'
 import {
+  Button,
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -7,11 +11,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious
-} from '@/components/ui/pagination'
-import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+} from '@/components/common'
 
 const RANGE = 2
 

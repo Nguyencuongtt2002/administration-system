@@ -14,19 +14,6 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
-
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import AutoPagination from '@/components/auto-pagination'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Plus } from 'lucide-react'
 
@@ -45,7 +32,25 @@ import {
 import useDebounce from '@/utils/hooks/useDebounce'
 import FormBrand from './FormBrand'
 import { useSelector } from 'react-redux'
-import { DialogDelete, LoadingData } from '@/components/common'
+import {
+  AutoPagination,
+  Button,
+  DialogDelete,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Input,
+  LoadingData,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/common'
 import { TFunction } from 'i18next'
 import { IListBrand } from '@/utils/interface/brand'
 import { deleteBrand, getListBrand } from '@/thunks/brand/brandThunk'

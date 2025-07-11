@@ -1,7 +1,4 @@
-'use client'
-
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle, Button } from '@/components/common'
 import { motion } from 'framer-motion'
 import { Ghost } from 'lucide-react'
 

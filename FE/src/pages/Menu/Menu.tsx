@@ -1,5 +1,5 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common'
 import { MenuTable } from '@/components/module/Menu'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 
