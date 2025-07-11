@@ -60,15 +60,30 @@ export default function MessagePage() {
     if (!socket) return
 
     socket.on('onlineUsers', (userIds: number[]) => {
-      const now = new Date().toISOString()
-      const updated = { ...userStatusMap }
-      userIds.forEach((id) => (updated[id] = { isOnline: true, lastActive: null }))
-      Object.keys(updated).forEach((idStr) => {
-        const id = +idStr
-        if (!userIds.includes(id)) updated[id] = { isOnline: false, lastActive: now }
+      setOnlineUserIds(userIds)
+
+      setUserStatusMap((prev) => {
+        const updated = { ...prev }
+        const now = new Date().toISOString()
+
+        userIds.forEach((id) => {
+          updated[id] = { isOnline: true, lastActive: null }
+        })
+
+        Object.keys(updated).forEach((idStr) => {
+          const id = parseInt(idStr)
+          if (!userIds.includes(id)) {
+            if (updated[id]?.isOnline !== false) {
+              updated[id] = {
+                isOnline: false,
+                lastActive: now
+              }
+            }
+          }
+        })
+        localStorage.setItem('userStatusMap', JSON.stringify(updated))
+        return updated
       })
-      setUserStatusMap(updated)
-      localStorage.setItem('userStatusMap', JSON.stringify(updated))
     })
 
     socket.on('messageReaction', ({ messageId, userId, emoji }) => {
@@ -88,7 +103,7 @@ export default function MessagePage() {
       socket.off('onlineUsers')
       socket.off('messageReaction')
     }
-  }, [userStatusMap])
+  }, [])
 
   useEffect(() => {
     if (!selectedUser || !currentUserId) return
