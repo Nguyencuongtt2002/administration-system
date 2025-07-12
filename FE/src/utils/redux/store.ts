@@ -10,6 +10,7 @@ import contactReducer from '@/thunks/contact/contactSlice'
 import menuReducer from '@/thunks/menu/menuSlice'
 import fileReducer from '@/thunks/file/fileSlice'
 import aboutReducer from '@/thunks/about/aboutSlice'
+import slideReducer from '@/thunks/slide/slideSlice'
 
 const persistConfig = {
   key: 'root',
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   contact: contactReducer,
   menu: menuReducer,
   file: fileReducer,
-  about: aboutReducer
+  about: aboutReducer,
+  slide: slideReducer
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

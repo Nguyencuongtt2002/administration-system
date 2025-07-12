@@ -57,3 +57,11 @@ export const CREATE_ABOUT = 'CREATE_ABOUT'
 export const UPDATE_ABOUT = 'UPDATE_ABOUT'
 export const DELETE_ABOUT = 'DELETE_ABOUT'
 //#endregion about
+
+//#region slide
+export const GET_LIST_SLIDE = 'GET_LIST_SLIDE'
+export const GET_SLIDE_DETAILS = 'GET_SLIDE_DETAILS'
+export const CREATE_SLIDE = 'CREATE_SLIDE'
+export const UPDATE_SLIDE = 'UPDATE_SLIDE'
+export const DELETE_SLIDE = 'DELETE_SLIDE'
+//#endregion slide

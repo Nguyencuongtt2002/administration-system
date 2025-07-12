@@ -5,7 +5,7 @@ import { urlApiSlide } from '@/utils/constants/urlApi'
 import { IAddSlideReq, IListSlide, IUpdateSlide } from '@/utils/interface/slide'
 
 const slideApi = {
-  getListAbout(query: IQueryBase) {
+  getListSlides(query: IQueryBase) {
     const url = `${urlApiSlide.getAll}`
     return http.get<IBaseResponse<IListDataResponse<IListSlide[]>>>(url, {
       params: query

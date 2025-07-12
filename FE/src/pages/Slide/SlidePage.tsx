@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common'
-import { MenuTable } from '@/components/module/Menu'
+import { SlideTable } from '@/components/module/Slide'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,7 +15,7 @@ const SlidePage = () => {
           </CardHeader>
           <CardContent>
             <Suspense>
-              <MenuTable />
+              <SlideTable />
             </Suspense>
           </CardContent>
         </Card>
