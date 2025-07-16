@@ -1,7 +1,7 @@
 import { RoleEnum } from '@/utils/enum/common'
 import { IMenuItem } from '@/utils/interface/common'
 import { adminRoute } from '@/utils/routes/routes'
-import { Home, ShoppingCart, LayoutGrid, Tags, Phone, BookOpen, Info, BookText, FileSliders } from 'lucide-react'
+import { Home, ShoppingCart, LayoutGrid, Tags, Phone, BookOpen, Info, BookText, FileSliders, Ruler } from 'lucide-react'
 
 const menuItems: IMenuItem[] = [
   {
@@ -50,6 +50,12 @@ const menuItems: IMenuItem[] = [
     title: 'common_sidebar_slide',
     Icon: FileSliders,
     href: `${adminRoute.base}/${adminRoute.slide}`,
+    roles: [RoleEnum.ADMIN]
+  },
+  {
+    title: 'common_sidebar_size',
+    Icon: Ruler,
+    href: `${adminRoute.base}/${adminRoute.size}`,
     roles: [RoleEnum.ADMIN]
   }
 ]

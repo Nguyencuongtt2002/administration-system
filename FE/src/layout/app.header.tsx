@@ -2,6 +2,7 @@ import DropdownAvatar from './dropdown-avatar'
 import NotificationComponent from '@/components/NotificationComponent'
 import MessageComponent from '@/components/MessageComponent'
 import { ModeToggle, SwitchLanguage } from '@/components/common'
+import React from 'react'
 
 const AppHeader = () => {
   return (
@@ -17,4 +18,4 @@ const AppHeader = () => {
   )
 }
 
-export default AppHeader
+export default React.memo(AppHeader)

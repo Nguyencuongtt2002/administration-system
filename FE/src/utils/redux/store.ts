@@ -11,6 +11,8 @@ import menuReducer from '@/thunks/menu/menuSlice'
 import fileReducer from '@/thunks/file/fileSlice'
 import aboutReducer from '@/thunks/about/aboutSlice'
 import slideReducer from '@/thunks/slide/slideSlice'
+import sizeReducer from '@/thunks/size/sizeSlice'
+import notificationReducer from '@/thunks/notification/notificationSlice'
 
 const persistConfig = {
   key: 'root',
@@ -28,7 +30,9 @@ const rootReducer = combineReducers({
   menu: menuReducer,
   file: fileReducer,
   about: aboutReducer,
-  slide: slideReducer
+  slide: slideReducer,
+  size: sizeReducer,
+  notification: notificationReducer
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

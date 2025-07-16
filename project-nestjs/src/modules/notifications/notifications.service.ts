@@ -36,10 +36,10 @@ export class NotificationsService {
     const [data, total] = await this.notificationsRepo.findAndCount({
       where: { receiver_id },
       order: { created_at: 'DESC' },
-      relations: ['sender'],
       take: limit,
       skip: (page - 1) * limit,
     });
+    console.log(data, total, page, limit);
 
     return {
       data,

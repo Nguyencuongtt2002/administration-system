@@ -14,6 +14,7 @@ import {
   MessagePage,
   NotFound,
   RegisterPage,
+  SizePage,
   SlidePage,
   VerifyPage
 } from '@/pages'
@@ -76,6 +77,10 @@ const useRouteElements = () => {
             {
               path: `${adminRoute.base}/${adminRoute.slide}`,
               element: <SlidePage />
+            },
+            {
+              path: `${adminRoute.base}/${adminRoute.size}`,
+              element: <SizePage />
             }
           ]
         }

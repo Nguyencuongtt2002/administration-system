@@ -65,3 +65,15 @@ export const urlApiSlide = {
   updateSlide: '/v1/Slide',
   deleteSlide: (id: string) => `/v1/Slide/${id}`
 }
+
+export const urlApiSize = {
+  getAll: '/v1/size',
+  createSize: '/v1/size',
+  getSizeDetails: (id: string) => `/v1/size/${id}`,
+  updateSize: '/v1/Slide',
+  deleteSize: (id: string) => `/v1/size/${id}`
+}
+
+export const urlApiNotification = {
+  getListNotification: (id: string) => `/v1/notifications/receiver/${id}`
+}

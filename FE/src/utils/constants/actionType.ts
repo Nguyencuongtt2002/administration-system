@@ -65,3 +65,15 @@ export const CREATE_SLIDE = 'CREATE_SLIDE'
 export const UPDATE_SLIDE = 'UPDATE_SLIDE'
 export const DELETE_SLIDE = 'DELETE_SLIDE'
 //#endregion slide
+
+//#region size
+export const GET_LIST_SIZE = 'GET_LIST_SIZE'
+export const GET_SIZE_DETAILS = 'GET_SIZE_DETAILS'
+export const CREATE_SIZE = 'CREATE_SIZE'
+export const UPDATE_SIZE = 'UPDATE_SIZE'
+export const DELETE_SIZE = 'DELETE_SIZE'
+//#endregion size
+
+//#region notification
+export const GET_LIST_NOTIFICATION = 'GET_LIST_NOTIFICATION'
+//#endregion notification

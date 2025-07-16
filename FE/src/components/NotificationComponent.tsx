@@ -1,11 +1,15 @@
-import { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext, useCallback } from 'react'
 import { FiBell } from 'react-icons/fi'
 import { jwtDecode } from 'jwt-decode'
 import { getDecodedToken } from '@/utils/helper/common'
 import { IAccount } from '@/utils/interface/auth'
 import { getSocket, initSocket } from '@/utils/constants/websocket'
-import { useAppSelector } from '@/utils/redux/hooks'
-import { Button, Card, CardContent, CardHeader, CardTitle, ScrollArea } from '@/components/common'
+import { useAppDispatch, useAppSelector } from '@/utils/redux/hooks'
+import { Button, Card, CardContent, CardHeader, CardTitle, LoadingData, ScrollArea } from '@/components/common'
+import { INotification, INotificationResponseData } from '@/utils/interface/notification'
+import { fetchNotifications } from '@/thunks/notification/notificationThunk'
+import { DEFAULT_LIMIT_PAGE, NUMBER_ONE } from '@/utils/constants/common'
+import { toast } from 'sonner'
 
 interface Notification {
   content: string
@@ -19,8 +23,11 @@ interface DecodedToken {
 }
 
 const NotificationComponent = () => {
+  const loadingContext = useContext(LoadingData)
+  const dispatch = useAppDispatch()
   const token = useAppSelector((state) => state.auth.access_token)
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const userId = useAppSelector((state) => state.auth.user.MaNguoiDung)
+  const [notifications, setNotifications] = useState<INotification[]>([])
   const [open, setOpen] = useState(false)
   const [decoded, setDecoded] = useState<DecodedToken | null>(null)
   const [page, setPage] = useState(1)
@@ -37,52 +44,57 @@ const NotificationComponent = () => {
 
   // Lấy userId từ token và gọi API lần đầu
   useEffect(() => {
-    const accessToken = localStorage.getItem('access_token')
-    if (accessToken) {
-      try {
-        const decodedToken = jwtDecode<DecodedToken>(accessToken)
-        setDecoded(decodedToken)
-        fetchNotifications(1)
-      } catch (err) {
-        console.error('Decode token failed', err)
-      }
-    }
+    handleGetListNotifications(1)
   }, [])
 
-  const fetchNotifications = async (pageNumber: number) => {
-    try {
-      setLoading(true)
-      const accessToken = localStorage.getItem('access_token')
-      const userId = getDecodedToken<IAccount>()?.MaNguoiDung
-      const response = await fetch(
-        `http://localhost:8080/api/v1/notifications/receiver/${userId}?page=${pageNumber}&limit=3`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      const result = await response.json()
+  const handleGetListNotifications = useCallback(
+    (pageNumber: number) => {
+      console.log(pageNumber)
 
-      const newData = (result.data.data || []).map((noti: any) => ({
-        ...noti,
-        isRead: noti.isRead ?? false // Giả sử API trả về isRead, nếu không thì mặc định là false
-      }))
-      if (pageNumber === 1) {
-        setNotifications(newData)
-      } else {
-        setNotifications((prev) => [...prev, ...newData])
-      }
-      setTotalNotificationCount(result.data.total || 0)
-      setPage(pageNumber)
-      setHasMore(result.data.page < result.data.totalPages)
-    } catch (err) {
-      console.error('Fetch notifications failed', err)
-    } finally {
-      setLoading(false)
-    }
-  }
+      if (!userId) return
+
+      loadingContext?.show()
+
+      dispatch(
+        fetchNotifications({
+          userId: String(userId),
+          query: {
+            page: String(pageNumber),
+            limit: String(3)
+          }
+        })
+      )
+        .unwrap()
+        .then((res) => {
+          const {
+            data: { data: rawData, total, page, totalPages }
+          } = res
+          const newData = (rawData || []).map((noti) => ({
+            ...noti,
+            is_read: noti.is_read ?? false
+          }))
+          if (pageNumber === NUMBER_ONE) {
+            setNotifications(newData)
+          } else {
+            setNotifications((prev) => {
+              const prevIds = new Set(prev.map((n) => n.id))
+              const unique = newData.filter((n) => !prevIds.has(n.id))
+              return [...prev, ...unique]
+            })
+          }
+          setTotalNotificationCount(total || 0)
+          setPage(pageNumber)
+          setHasMore(page < totalPages)
+        })
+        .catch(() => {
+          toast.error('Lỗi khi tải danh sách!')
+        })
+        .finally(() => {
+          loadingContext?.hide()
+        })
+    },
+    [userId]
+  )
 
   // SOCKET: nhận thông báo realtime
   useEffect(() => {
@@ -90,10 +102,10 @@ const NotificationComponent = () => {
     if (!socket) return
 
     socket.on('receiveNotification', (data) => {
-      const newNoti: Notification = {
+      const newNoti: INotification = {
         content: data.content,
         created_at: new Date(data.timestamp).toISOString(),
-        isRead: false // Thông báo mới từ socket mặc định là chưa đọc
+        is_read: false
       }
       setNotifications((prev) => [newNoti, ...prev])
       setTotalNotificationCount((prev) => prev + 1)
@@ -115,42 +127,24 @@ const NotificationComponent = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Load thêm khi scroll gần cuối, reset khi scroll lên đầu
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+  const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
 
     if (scrollTop < 10 && page > 1 && !loading) {
-      fetchNotifications(1)
+      await sleep(1000) // ⏳ Chờ 10 giây
+      handleGetListNotifications(NUMBER_ONE)
       return
     }
 
     if (scrollHeight - scrollTop - clientHeight < 10 && hasMore && !loading) {
-      fetchNotifications(page + 1)
+      await sleep(1000) // ⏳ Chờ 10 giây
+      handleGetListNotifications(page + NUMBER_ONE)
     }
   }
 
-  // Đánh dấu thông báo là đã đọc khi nhấp vào
-  const markAsRead = async (index: number) => {
-    const notification = notifications[index]
-    if (notification.isRead) return // Nếu đã đọc thì không làm gì
-
-    try {
-      const accessToken = localStorage.getItem('access_token')
-      // Giả sử có API để đánh dấu thông báo là đã đọc
-      await fetch(`http://localhost:8080/api/v1/notifications/${notification.created_at}/read`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-
-      // Cập nhật trạng thái client-side
-      setNotifications((prev) => prev.map((noti, i) => (i === index ? { ...noti, isRead: true } : noti)))
-    } catch (err) {
-      console.error('Mark notification as read failed', err)
-    }
-  }
+  // Đánh dấu thông báo là đã đọc khi nhấp và
 
   const sendTestNotification = () => {
     if (!decoded?.MaNguoiDung) return
@@ -213,9 +207,8 @@ const NotificationComponent = () => {
                       <li
                         key={`${noti.created_at}-${idx}`}
                         className={`p-3 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors cursor-pointer ${
-                          noti.isRead ? '' : 'bg-gray-300 dark:bg-gray-800'
+                          noti.is_read ? '' : 'bg-gray-300 dark:bg-gray-800'
                         }`}
-                        onClick={() => markAsRead(idx)}
                       >
                         <p className='text-gray-800 dark:text-gray-200'>{noti.content}</p>
                         <time className='block text-xs text-gray-500 dark:text-gray-400 mt-1 select-none'>
@@ -239,4 +232,4 @@ const NotificationComponent = () => {
   )
 }
 
-export default NotificationComponent
+export default React.memo(NotificationComponent)

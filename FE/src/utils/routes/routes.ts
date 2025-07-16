@@ -7,5 +7,6 @@ export const adminRoute = {
   contact: 'contact',
   menu: 'menu',
   about: 'about',
-  slide: 'slide'
+  slide: 'slide',
+  size: 'size'
 } as const
